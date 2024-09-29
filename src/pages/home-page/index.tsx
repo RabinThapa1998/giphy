@@ -1,16 +1,11 @@
-import React, {
-    Suspense,
-    useCallback,
-    useState,
-    useTransition,
-} from 'react';
+import React, { Suspense, useCallback, useState, useTransition } from 'react';
 import SearchResultsComponent from './components/search-results-component';
 import ErrorBoundary from '../../lib/ErrorBoundary';
 import useDebounce from '../../hooks/useDebounce';
 import { getQueryParams, setQueryParams } from '../../utils/router-handler';
 
 const getUrlSearchQuery = () => {
-    const searchQuery = getQueryParams().get('search')
+    const searchQuery = getQueryParams().get('search');
     return searchQuery || '';
 };
 
@@ -19,14 +14,13 @@ function HomePage() {
     const debounced = useDebounce(searchTerm);
     const [, startTransition] = useTransition();
 
-
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             // const query = `?search=${encodeURIComponent(e.target.value)}`;
             // window.history.pushState(null, '', query);
-            setQueryParams( {
-                search: e.target.value
-            })
+            setQueryParams({
+                search: e.target.value,
+            });
             startTransition(() => {
                 setSearchTerm(e.target.value);
             });
@@ -36,7 +30,9 @@ function HomePage() {
 
     return (
         <div className="container py-4">
-            <h1 className="font-bold text-4xl">GIPHY</h1>
+            <a href="/" className="w-fit inline-block">
+                <h1 className="font-bold text-4xl">GIPHY</h1>
+            </a>
             <div className="sticky top-0 z-50 pt-4 pb-4 bg-background">
                 <input
                     defaultValue={searchTerm}

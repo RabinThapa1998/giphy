@@ -57,7 +57,9 @@ function PaginationComponent({
             >
                 Prev
             </button>
+            <p className='font-bold'>
             {paginationConfig.currentPage + 1}
+            </p>
             <button
                 className="btn-secondary"
                 disabled={
