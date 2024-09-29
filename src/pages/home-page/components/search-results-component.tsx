@@ -41,12 +41,16 @@ function SearchResultsComponent({ query }: { query: string }) {
             <div className="flex text-gray-500 gap-2 justify-end mt-4 italic">
                 {query ? (
                     <>
-                        <h1 className="">Results for "{query}"</h1>/
-                        <p>{data?.pagination?.total_count} results</p>/
+                        <p className="">Results for "{query}"</p>/
+                        <p>Total {data?.pagination?.total_count} results</p>/
                         <p>Page {paginationConfig.currentPage + 1}</p>
                     </>
                 ) : (
-                    <p>Trending</p>
+                    <>
+                    <p>Trending</p>/
+                    <p>Total {data?.pagination?.total_count} results</p>/
+                    <p>Page {paginationConfig.currentPage + 1}</p>
+                    </>
                 )}
             </div>
             <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
