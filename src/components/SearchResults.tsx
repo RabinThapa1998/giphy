@@ -41,41 +41,47 @@ function SearchResults({ query }: { query: string }) {
             {/* {data?.data?.map((gif) => 
                 <LazyLoadedGif key={gif.id} gif={gif} />
             )} */}
-            <div className="grid gap-4">
+            <div className="flex flex-col gap-4">
             {firstColumn?.map((gif) => (
                 <LazyLoadedGif key={gif.id} gif={gif} />
             ))}
           </div>
-          <div className="grid gap-4">
-            {secondColumn?.map((gif) => (
+          <div className="flex flex-col gap-4 items-center justify-center">
+          {secondColumn?.map((gif) => (
                 <LazyLoadedGif key={gif.id} gif={gif} />
             ))}
           </div>
-          <div className="grid gap-4">
-            {thirdColumn?.map((gif) => (
+          <div className="flex flex-col gap-4">
+          {thirdColumn?.map((gif) => (
                 <LazyLoadedGif key={gif.id} gif={gif} />
             ))}
           </div>
         </div>
     );
 }
-
 function LazyLoadedGif({ gif }: { gif: Datum }) {
     const [ref, isIntersecting] = useIntersectionObserver({
         rootMargin: '0px',
         threshold: 0,
     });
     const [isLoaded, setIsLoaded] = useState(false);
+    const [hasBeenVisible, setHasBeenVisible] = useState(false); // Track if it has ever been visible
+
+    useEffect(() => {
+        if (isIntersecting) {
+            setHasBeenVisible(true); // Set true when the component enters the viewport for the first time
+        }
+    }, [isIntersecting]);
 
     return (
         <div
             ref={ref as React.RefObject<HTMLDivElement>}
-            className="gif w-full"
+            className="gif w-full border border-red-500"
             style={{
                 aspectRatio: `${Number(gif.images.original.width) / Number(gif.images.original.height)}`,
               }}
         >
-            {isIntersecting && !isLoaded && (
+            {!hasBeenVisible || !isLoaded &&(
                 <div
                     className="w-full h-full bg-gray-200 animate-pulse"
                     aria-hidden="true"
@@ -83,7 +89,7 @@ function LazyLoadedGif({ gif }: { gif: Datum }) {
                     Loading...
                 </div>
             )}
-            {isIntersecting && (
+            {hasBeenVisible && (
                 <picture>
                     <source
                         type="image/webp"
@@ -116,5 +122,4 @@ function LazyLoadedGif({ gif }: { gif: Datum }) {
         </div>
     );
 }
-
 export default memo(SearchResults);

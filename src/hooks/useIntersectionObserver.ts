@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 
 export function useIntersectionObserver(options = {}) {
   const [isIntersecting, setIsIntersecting] = useState(false)
   const targetRef = useRef(null)
 
+  const memoizedOptions = useMemo(() => options, [options])
+
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      console.log("🚀 ~ observer ~ entry:", entry)
       setIsIntersecting(entry.isIntersecting)
-    }, options)
+    }, memoizedOptions)
 
     if (targetRef.current) {
       observer.observe(targetRef.current)
@@ -19,8 +20,7 @@ export function useIntersectionObserver(options = {}) {
         observer.unobserve(targetRef.current)
       }
     }
-  }, [options])
+  }, [memoizedOptions])
 
   return [targetRef, isIntersecting]
 }
-
