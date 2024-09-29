@@ -19,12 +19,13 @@ function App() {
         []
     );
 
-    return (
-        <div>
-            <h1 className="font-bold text-3xl">GIPHY</h1>
+    return ( 
+        <div className='container py-4'>
+            <h1 className="font-bold text-4xl ">GIPHY</h1>
             <input
                 type="text"
-                placeholder="search gifs"
+                className='py-4 px-6  rounded-primary text-2xl w-full ring-1 ring-purple-500 p-4 focus:ring-2 focus:ring-purple-600 mb-10 mt-4'
+                placeholder="search gifs "
                 onChange={handleChange}
             />
             {isPending && <div className="text-gray-500">Searching...</div>}

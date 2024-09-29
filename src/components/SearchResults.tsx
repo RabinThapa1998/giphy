@@ -37,7 +37,7 @@ function SearchResults({ query }: { query: string }) {
 
 
     return (
-        <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4 space-y-4 max-w-3xl mx-auto">
+        <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4">
             {/* {data?.data?.map((gif) => 
                 <LazyLoadedGif key={gif.id} gif={gif} />
             )} */}
@@ -46,7 +46,7 @@ function SearchResults({ query }: { query: string }) {
                 <LazyLoadedGif key={gif.id} gif={gif} />
             ))}
           </div>
-          <div className="flex flex-col gap-4 items-center justify-center">
+          <div className="flex flex-col gap-4">
           {secondColumn?.map((gif) => (
                 <LazyLoadedGif key={gif.id} gif={gif} />
             ))}
@@ -76,7 +76,7 @@ function LazyLoadedGif({ gif }: { gif: Datum }) {
     return (
         <div
             ref={ref as React.RefObject<HTMLDivElement>}
-            className="gif w-full border border-red-500"
+            className="gif w-full rounded-primary overflow-hidden"
             style={{
                 aspectRatio: `${Number(gif.images.original.width) / Number(gif.images.original.height)}`,
               }}
