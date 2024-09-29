@@ -49,7 +49,7 @@ function PaginationComponent({
     };
 
     return (
-        <div className="my-4 flex items-center  justify-end gap-4 text-sm">
+        <div className="my-8 flex items-center  justify-end gap-4 text-sm">
             <button
                 className="btn-secondary"
                 disabled={paginationConfig.offset === 0}

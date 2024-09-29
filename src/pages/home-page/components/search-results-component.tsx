@@ -1,26 +1,11 @@
 import { memo, useState } from 'react';
-import { TrendingResponse } from '../../../../types';
-import { APP_KEY } from '../../../config';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getQueryParams } from '../../../utils/router-handler';
 import { PaginationConfig } from '../../../../types/config';
 import PaginationComponent from './pagination-component';
 import { limit, offset } from '../../../constants';
-
-async function fetchGifs(
-    query: string,
-    limit: number,
-    offset: number
-): Promise<TrendingResponse> {
-    if (!query) {
-        return fetch('http://localhost:3000/data').then((res) => res.json());
-    } else {
-        return fetch(
-            `https://api.giphy.com/v1/gifs/search?api_key=${APP_KEY}&q=${query}&limit=${limit}&offset=${offset}`
-        ).then((res) => res.json());
-    }
-}
+import { findAllGifs } from '../../../services/gif.service';
 
 
 
@@ -46,7 +31,7 @@ function SearchResultsComponent({ query }: { query: string }) {
             paginationConfig.offset,
         ],
         queryFn: () =>
-            fetchGifs(query, paginationConfig.limit, paginationConfig.offset),
+            findAllGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
 
     const firstColumn = data?.data?.filter((_, index) => index % 3 === 0);
@@ -55,12 +40,12 @@ function SearchResultsComponent({ query }: { query: string }) {
 
     return (
         <section>
-            <PaginationComponent
-                paginationConfig={paginationConfig}
-                setPaginationConfig={setPaginationConfig}
-                totalCount={data?.pagination?.total_count || 0}
-            />
-            <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4">
+           {query ?<div className='flex text-gray-500 gap-2 justify-end mt-4'> 
+               <h1 className="">Results for "{query}"</h1>/
+               <p>{data?.pagination?.total_count} results</p>/
+               <p>Page {paginationConfig.currentPage + 1}</p>
+           </div> : ""}
+            <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
                 <div className="flex flex-col gap-4">
                     {firstColumn?.map((gif) => (
                         <GifLoader key={gif.id} gif={gif} />
@@ -77,6 +62,11 @@ function SearchResultsComponent({ query }: { query: string }) {
                     ))}
                 </div>
             </div>
+            <PaginationComponent
+                paginationConfig={paginationConfig}
+                setPaginationConfig={setPaginationConfig}
+                totalCount={data?.pagination?.total_count || 0}
+            />
         </section>
     );
 }
