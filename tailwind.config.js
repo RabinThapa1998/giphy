@@ -21,6 +21,9 @@ export default {
             colors:{
                 primary: '#F15897',
                 background:"#121212"
+            },
+            fontFamily:{
+                'Inter': ['Inter', 'sans-serif'],
             }
         },
     },

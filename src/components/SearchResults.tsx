@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { Datum, TrendingResponse } from '../../types';
 import { APP_KEY } from '../config';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { cn } from '../lib/cn';
 
 function SearchResults({ query }: { query: string }) {
     const [data, setData] = useState<TrendingResponse | null>(null);
@@ -67,6 +68,14 @@ function LazyLoadedGif({ gif }: { gif: Datum }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasBeenVisible, setHasBeenVisible] = useState(false); // Track if it has ever been visible
 
+    const colorPalette = [
+        '#00FF99',
+        '#9933ff',
+        '#FFF35C',
+        '#FF6666',
+        '#00CCFF'
+    ]
+
     useEffect(() => {
         if (isIntersecting) {
             setHasBeenVisible(true); // Set true when the component enters the viewport for the first time
@@ -83,7 +92,11 @@ function LazyLoadedGif({ gif }: { gif: Datum }) {
         >
             {!hasBeenVisible || !isLoaded &&(
                 <div
-                    className="w-full h-full bg-gray-200 animate-pulse"
+                    className={cn("w-full h-full  animate-pulse",
+                    )}
+                    style={{
+                        backgroundColor: colorPalette[Math.floor(Math.random() * colorPalette.length)],
+                    }}
                     aria-hidden="true"
                 >
                     Loading...
