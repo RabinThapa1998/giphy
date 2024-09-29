@@ -17,6 +17,10 @@ export default {
             },
             borderRadius:{
                 'primary': '0.5rem',
+            },
+            colors:{
+                primary: '#F15897',
+                dark:"#121212"
             }
         },
     },
