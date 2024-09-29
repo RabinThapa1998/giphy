@@ -7,8 +7,6 @@ import PaginationComponent from './pagination-component';
 import { limit, offset } from '../../../constants';
 import { findAllGifs } from '../../../services/gif.service';
 
-
-
 const getPaginationConfigFromUrl = (): PaginationConfig => {
     const params = getQueryParams();
     return {
@@ -40,11 +38,17 @@ function SearchResultsComponent({ query }: { query: string }) {
 
     return (
         <section>
-           {query ?<div className='flex text-gray-500 gap-2 justify-end mt-4'> 
-               <h1 className="">Results for "{query}"</h1>/
-               <p>{data?.pagination?.total_count} results</p>/
-               <p>Page {paginationConfig.currentPage + 1}</p>
-           </div> : ""}
+            <div className="flex text-gray-500 gap-2 justify-end mt-4 italic">
+                {query ? (
+                    <>
+                        <h1 className="">Results for "{query}"</h1>/
+                        <p>{data?.pagination?.total_count} results</p>/
+                        <p>Page {paginationConfig.currentPage + 1}</p>
+                    </>
+                ) : (
+                    <p>Trending</p>
+                )}
+            </div>
             <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
                 <div className="flex flex-col gap-4">
                     {firstColumn?.map((gif) => (

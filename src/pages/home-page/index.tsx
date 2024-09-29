@@ -29,11 +29,11 @@ function HomePage() {
     );
 
     return (
-        <div className="container py-4">
+        <div className="container pt-6 pb-10">
             <a href="/" className="w-fit inline-block">
                 <h1 className="font-bold text-4xl">GIPHY</h1>
             </a>
-            <div className="sticky top-0 z-50 pt-4 pb-4 bg-background mb-8">
+            <div className="sticky top-0 z-50 pt-4 pb-4 bg-background mb-4">
                 <input
                     defaultValue={searchTerm}
                     type="text"
