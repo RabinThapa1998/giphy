@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Datum } from "../../../types";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import { cn } from "../../lib/cn";
+import { useEffect, useState } from 'react';
+import { Datum } from '../../../types';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
+import { cn } from '../../lib/cn';
 
 function GifLoader({ gif }: { gif: Datum }) {
     const [ref, isIntersecting] = useIntersectionObserver({
@@ -49,9 +49,7 @@ function GifLoader({ gif }: { gif: Datum }) {
                                 ],
                         }}
                         aria-hidden="true"
-                    >
-                        Loading...
-                    </div>
+                    ></div>
                 ))}
             {hasBeenVisible && (
                 <picture>
@@ -70,7 +68,7 @@ function GifLoader({ gif }: { gif: Datum }) {
                         alt={gif.title}
                         className={cn(
                             `w-full h-full transition-opacity duration-300`,
-                            isLoaded ? 'opacity-100 block' : 'opacity-0 none',
+                            isLoaded ? 'opacity-100 block' : 'opacity-0 none'
                         )}
                         onLoad={() => setIsLoaded(true)}
                         onError={(e) => {
@@ -78,7 +76,6 @@ function GifLoader({ gif }: { gif: Datum }) {
                             e.currentTarget.src =
                                 '/placeholder.svg?height=100&width=100';
                         }}
-                  
                     />
                 </picture>
             )}
@@ -86,4 +83,4 @@ function GifLoader({ gif }: { gif: Datum }) {
     );
 }
 
-export default GifLoader
+export default GifLoader;

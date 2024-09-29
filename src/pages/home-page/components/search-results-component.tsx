@@ -1,34 +1,23 @@
-import  { memo, useEffect, useState } from 'react';
-import {  TrendingResponse } from '../../../../types';
+import { memo } from 'react';
+import { TrendingResponse } from '../../../../types';
 import { APP_KEY } from '../../../config';
 import GifLoader from '../../../common/gif/gif-loader';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
+async function fetchGifs(query: string): Promise<TrendingResponse> {
+    if (!query) {
+        return fetch('http://localhost:3000/data').then((res) => res.json());
+    } else {
+        return fetch(
+            `https://api.giphy.com/v1/gifs/search?api_key=${APP_KEY}&q=${query}`
+        ).then((res) => res.json());
+    }
+}
 function SearchResultsComponent({ query }: { query: string }) {
-    const [data, setData] = useState<TrendingResponse | null>(null);
-
-    useEffect(() => {
-        if (!query) {
-            fetch('http://localhost:3000/data')
-                .then((res) => res.json())
-                .then((data) => {
-                    setData(data);
-                })
-                .catch((error) =>
-                    console.error('Error fetching trending gifs:', error)
-                );
-        } else {
-            fetch(
-                `https://api.giphy.com/v1/gifs/search?api_key=${APP_KEY}&q=${query}`
-            )
-                .then((res) => res.json())
-                .then((data) => {
-                    setData(data);
-                })
-                .catch((error) =>
-                    console.error('Error fetching search results:', error)
-                );
-        }
-    }, [query]);
+    const { data } = useSuspenseQuery({
+        queryKey: ['gif-list', query],
+        queryFn: () => fetchGifs(query),
+    });
 
     const firstColumn = data?.data?.filter((_, index) => index % 3 === 0);
     const secondColumn = data?.data?.filter((_, index) => index % 3 === 1);

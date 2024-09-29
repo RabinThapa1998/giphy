@@ -6,8 +6,7 @@ import useDebounce from '../../hooks/useDebounce';
 function HomePage() {
     const [searchTerm, setSearchTerm] = useState('');
     const debounced = useDebounce(searchTerm);
-    console.log('🚀 ~ App ~ debounced:', debounced);
-    const [isPending, startTransition] = useTransition();
+    const [, startTransition] = useTransition();
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,18 +17,23 @@ function HomePage() {
         []
     );
 
-    return ( 
-        <div className='container py-4'>
-            <h1 className="font-bold text-4xl ">GIPHY</h1>
-            <input
-                type="text"
-                placeholder="Search GIFs"
-                className='input-field mb-10 mt-4'
-                onChange={handleChange}
-            />
-            {isPending && <div className="text-gray-500">Searching...</div>}
+    return (
+        <div className="container py-4">
+            <h1 className="font-bold text-4xl">GIPHY</h1>
+            <div className="sticky top-0 z-50 pt-4 pb-4 bg-background">
+                <input
+                    type="text"
+                    placeholder="Search GIFs"
+                    className="input-field"
+                    onChange={handleChange}
+                />
+            </div>
             <ErrorBoundary>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense
+                    fallback={
+                        <p className="text-white font-bold">Loading...</p>
+                    }
+                >
                     <SearchResultsComponent query={debounced} />
                 </Suspense>
             </ErrorBoundary>
