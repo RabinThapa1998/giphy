@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Datum } from '../../../types';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-import { cn } from '../../lib/cn';
+import { cn } from '../../utils/cn';
 
 function GifLoader({ gif }: { gif: Datum }) {
     const [ref, isIntersecting] = useIntersectionObserver({
@@ -71,11 +71,10 @@ function GifLoader({ gif }: { gif: Datum }) {
                             isLoaded ? 'opacity-100 block' : 'opacity-0 none'
                         )}
                         onLoad={() => setIsLoaded(true)}
-                        onError={(e) => {
-                            console.error('Error loading image:', e);
-                            e.currentTarget.src =
-                                '/placeholder.svg?height=100&width=100';
-                        }}
+                        // onError={(e) => {
+                        //     console.log('Error loading image:', e);
+                        //     e.currentTarget.src = '/error.png'
+                        // }}
                     />
                 </picture>
             )}

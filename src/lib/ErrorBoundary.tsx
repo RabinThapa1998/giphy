@@ -21,8 +21,8 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return <div>
-        <h1>ERROR IN COMPONENT</h1>
+      return <div className='border border-primary rounded-primary  p-4 lg:p-8'>
+        <p className='font-bold text-lg lg:text-2xl'>ERROR IN COMPONENT</p>
       </div>
     }
 
