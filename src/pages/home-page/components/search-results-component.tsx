@@ -3,7 +3,10 @@ import { TrendingResponse } from '../../../../types';
 import { APP_KEY } from '../../../config';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getQueryParams, setQueryParams } from '../../../utils/router-handler';
+import { getQueryParams } from '../../../utils/router-handler';
+import { PaginationConfig } from '../../../../types/config';
+import PaginationComponent from './pagination-component';
+import { limit, offset } from '../../../constants';
 
 async function fetchGifs(
     query: string,
@@ -19,12 +22,10 @@ async function fetchGifs(
     }
 }
 
-const limit = 50;
-const offset = 0;
 
-const getPaginationConfigFromUrl = () => {
+
+const getPaginationConfigFromUrl = (): PaginationConfig => {
     const params = getQueryParams();
-
     return {
         limit: Number(params.get('limit')) || limit,
         offset: Number(params.get('offset')) || offset,
@@ -33,13 +34,10 @@ const getPaginationConfigFromUrl = () => {
     };
 };
 function SearchResultsComponent({ query }: { query: string }) {
-    const [paginationConfig, setPaginationConfig] = useState(
+    const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>(
         getPaginationConfigFromUrl
     );
-    console.log(
-        '🚀 ~ SearchResultsComponent ~ paginationConfig:',
-        paginationConfig
-    );
+
     const { data } = useSuspenseQuery({
         queryKey: [
             'gif-list',
@@ -50,47 +48,6 @@ function SearchResultsComponent({ query }: { query: string }) {
         queryFn: () =>
             fetchGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
-    console.log('🚀 ~ SearchResultsComponent ~ data:', data);
-
-    const handlePagination = (action: 'next' | 'prev') => {
-        if (action === 'next') {
-            //*check for total_count in data
-            if (
-                data?.pagination?.total_count <=
-                paginationConfig.limit + paginationConfig.offset
-            )
-                return;
-            setPaginationConfig((prev) => {
-                const newConfig = {
-                    ...prev,
-                    offset: (prev.currentPage + 1) * prev.limit,
-                    currentPage: prev.currentPage + 1,
-                };
-
-                setQueryParams({
-                    offset: newConfig.offset.toString(),
-                    limit: newConfig.limit.toString(),
-                });
-
-                return newConfig;
-            });
-        } else {
-            setPaginationConfig((prev) => {
-                const newConfig = {
-                    ...prev,
-                    offset: Math.max(prev.currentPage - 1, 0) * prev.limit,
-                    currentPage: Math.max(prev.currentPage - 1, 0),
-                };
-
-                setQueryParams({
-                    offset: newConfig.offset.toString(),
-                    limit: newConfig.limit.toString(),
-                });
-
-                return newConfig;
-            });
-        }
-    };
 
     const firstColumn = data?.data?.filter((_, index) => index % 3 === 0);
     const secondColumn = data?.data?.filter((_, index) => index % 3 === 1);
@@ -98,24 +55,11 @@ function SearchResultsComponent({ query }: { query: string }) {
 
     return (
         <section>
-            <div className="my-4 flex  justify-end gap-4">
-                <button
-                    disabled={paginationConfig.offset === 0}
-                    onClick={() => handlePagination('prev')}
-                >
-                    Prev
-                </button>
-                {paginationConfig.currentPage + 1}
-                <button
-                    disabled={
-                        data?.pagination?.total_count <=
-                        paginationConfig.limit + paginationConfig.offset
-                    }
-                    onClick={() => handlePagination('next')}
-                >
-                    Next
-                </button>
-            </div>
+            <PaginationComponent
+                paginationConfig={paginationConfig}
+                setPaginationConfig={setPaginationConfig}
+                totalCount={data?.pagination?.total_count || 0}
+            />
             <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4">
                 <div className="flex flex-col gap-4">
                     {firstColumn?.map((gif) => (

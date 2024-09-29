@@ -20,7 +20,8 @@ export default {
             },
             colors:{
                 primary: '#F15897',
-                background:"#121212"
+                background:"#121212",
+                secondary:'#222831'
             },
             fontFamily:{
                 'Inter': ['Inter', 'sans-serif'],
