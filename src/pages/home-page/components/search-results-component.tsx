@@ -35,6 +35,8 @@ function SearchResultsComponent({ query }: { query: string }) {
     const firstColumn = data?.data?.filter((_, index) => index % 3 === 0);
     const secondColumn = data?.data?.filter((_, index) => index % 3 === 1);
     const thirdColumn = data?.data?.filter((_, index) => index % 3 === 2);
+    
+
 
     return (
         <section>

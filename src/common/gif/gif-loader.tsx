@@ -35,6 +35,7 @@ function GifLoader({ gif }: { gif: Datum }) {
                     Number(gif.images.original.height)
                 }`,
             }}
+            data-testid="gif"
         >
             {!hasBeenVisible ||
                 (!isLoaded && (

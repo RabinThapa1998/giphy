@@ -1,17 +1,16 @@
-import { TrendingResponse } from "../../types";
-import { APP_KEY } from "../config";
+import { TrendingResponse } from '../../types';
+import fetchHandler from '../utils/fetch-handler';
 
 export async function findAllGifs(
     query: string,
     limit: number,
     offset: number
 ): Promise<TrendingResponse> {
+    const params = { limit:limit.toString(), offset:offset.toString() };
+
     if (!query) {
-        // return fetch('http://localhost:3000/data').then((res) => res.json());
-        return fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${APP_KEY}&limit=${limit}&offset=${offset}`).then((res) => res.json());
+        return fetchHandler('gifs/trending', params);
     } else {
-        return fetch(
-            `https://api.giphy.com/v1/gifs/search?api_key=${APP_KEY}&q=${query}&limit=${limit}&offset=${offset}`
-        ).then((res) => res.json());
+        return fetchHandler('gifs/search', { ...params, q: query });
     }
 }
