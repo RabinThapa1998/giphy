@@ -1,8 +1,8 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState, forwardRef, useImperativeHandle, Ref } from 'react';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getQueryParams, setQueryParams } from '../../../utils/router-handler';
-import { PaginationConfig } from '../../../../types/config';
+import { getQueryParams } from '../../../utils/router-handler';
+import { PaginationConfig, SearchResultsRef } from '../../../../types/config';
 import PaginationComponent from './pagination-component';
 import { limit, offset } from '../../../constants';
 import { findAllGifs } from '../../../services/gif.service';
@@ -18,11 +18,23 @@ const getPaginationConfigFromUrl = (): PaginationConfig => {
             Number(params.get('offset')) / Number(params.get('limit')) || 0,
     };
 };
-function SearchResultsComponent({ query }: { query: string }) {
+
+function SearchResultsComponent({ query }: { query: string }, ref: Ref<SearchResultsRef>) {
     const windowSize = useWindowSize();
     const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>(
         getPaginationConfigFromUrl
     );
+
+    //* exposing reset pagination config for parent 
+    useImperativeHandle(ref, () => ({
+        resetPagination() {
+            setPaginationConfig({
+                limit,
+                offset,
+                currentPage: 0,
+            });
+        },
+    }));
 
     const { data } = useSuspenseQuery({
         queryKey: [
@@ -34,21 +46,6 @@ function SearchResultsComponent({ query }: { query: string }) {
         queryFn: () =>
             findAllGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
-
-
-    useEffect(() => {
-        if(!query){
-            setPaginationConfig({
-                limit,
-                offset,
-                currentPage: 0,
-            });
-            setQueryParams({
-                offset: offset.toString(),
-                limit: limit.toString(),
-            })
-        }
-    },[query])
 
     const columnCount = useMemo(
         () => (windowSize.width > 1024 ? 3 : 2),
@@ -80,23 +77,7 @@ function SearchResultsComponent({ query }: { query: string }) {
                     </>
                 )}
             </div>
-            {/* <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2"> */}
-            <div className="giflist grid grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
-                {/* <div className="flex flex-col gap-4">
-                    {firstColumn?.map((gif) => (
-                        <GifLoader key={gif.id} gif={gif} />
-                    ))}
-                </div>
-                <div className="flex flex-col gap-4">
-                    {secondColumn?.map((gif) => (
-                        <GifLoader key={gif.id} gif={gif} />
-                    ))}
-                </div>
-                <div className="flex flex-col gap-4">
-                    {thirdColumn?.map((gif) => (
-                        <GifLoader key={gif.id} gif={gif} />
-                    ))}
-                </div> */}
+            <div className="giflist grid grid-cols-2 lg:grid-cols-3 gap-x-4 mt-2">
                 {columns?.map((column, index) => (
                     <div className="flex flex-col gap-4" key={index}>
                         {column?.map((gif) => (
@@ -114,4 +95,4 @@ function SearchResultsComponent({ query }: { query: string }) {
     );
 }
 
-export default memo(SearchResultsComponent);
+export default memo(forwardRef(SearchResultsComponent));

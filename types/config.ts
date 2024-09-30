@@ -3,3 +3,8 @@ export type PaginationConfig = {
     offset: number;
     currentPage: number;
 }
+
+
+export type SearchResultsRef = {
+    resetPagination: () => void;
+}

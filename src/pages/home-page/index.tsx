@@ -1,9 +1,11 @@
-import React, { Suspense, useCallback, useState, useTransition } from 'react';
+import React, { Suspense, useCallback, useRef, useState, useTransition } from 'react';
 import SearchResultsComponent from './components/search-results-component';
 import ErrorBoundary from '../../lib/ErrorBoundary';
 import useDebounce from '../../hooks/useDebounce';
 import { getQueryParams, setQueryParams } from '../../utils/router-handler';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { limit, offset } from '../../constants';
+import { SearchResultsRef } from '../../../types/config';
 
 const getUrlSearchQuery = () => {
     const searchQuery = getQueryParams().get('search');
@@ -14,14 +16,24 @@ function HomePage() {
     const [searchTerm, setSearchTerm] = useState(getUrlSearchQuery);
     const debounced = useDebounce(searchTerm);
     const [, startTransition] = useTransition();
+    const searchResultsRef = useRef<SearchResultsRef>(null);
 
+
+    const handleResetPagination = () => {
+        if (searchResultsRef.current) {
+            searchResultsRef.current?.resetPagination();
+        }
+    };
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            // const query = `?search=${encodeURIComponent(e.target.value)}`;
-            // window.history.pushState(null, '', query);
             setQueryParams({
                 search: e.target.value,
+                offset: offset.toString(),
+                limit: limit.toString(),
             });
+            
+            handleResetPagination();
+            
             startTransition(() => {
                 setSearchTerm(e.target.value);
             });
@@ -53,7 +65,7 @@ function HomePage() {
                                 </p>
                             }
                         >
-                            <SearchResultsComponent query={debounced} />
+                            <SearchResultsComponent ref={searchResultsRef} query={debounced} />
                         </Suspense>
                     </ErrorBoundary>
                 )}
