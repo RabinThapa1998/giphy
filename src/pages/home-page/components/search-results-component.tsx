@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getQueryParams } from '../../../utils/router-handler';
@@ -6,6 +6,8 @@ import { PaginationConfig } from '../../../../types/config';
 import PaginationComponent from './pagination-component';
 import { limit, offset } from '../../../constants';
 import { findAllGifs } from '../../../services/gif.service';
+import { Datum } from '../../../../types';
+import useWindowSize from '../../../hooks/useWindowSize';
 
 const getPaginationConfigFromUrl = (): PaginationConfig => {
     const params = getQueryParams();
@@ -17,6 +19,7 @@ const getPaginationConfigFromUrl = (): PaginationConfig => {
     };
 };
 function SearchResultsComponent({ query }: { query: string }) {
+    const windowSize = useWindowSize();
     const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>(
         getPaginationConfigFromUrl
     );
@@ -32,12 +35,17 @@ function SearchResultsComponent({ query }: { query: string }) {
             findAllGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
 
-    const firstColumn = data?.data?.filter((_, index) => index % 3 === 0);
-    const secondColumn = data?.data?.filter((_, index) => index % 3 === 1);
-    const thirdColumn = data?.data?.filter((_, index) => index % 3 === 2);
+    const columnCount = useMemo(() => (windowSize.width > 1024 ? 3 : 2), [windowSize]);
+
+    const columns = useMemo(() => {
+        const cols: Datum[][] = Array.from({ length: columnCount }, () => []);
+        data?.data?.forEach((gif, index) => {
+            cols[index % columnCount].push(gif);
+        });
+        return cols;
+    }, [data?.data, columnCount]);
+
     
-
-
     return (
         <section>
             <div className="flex text-gray-500 gap-2 justify-end mt-4 italic">
@@ -55,8 +63,9 @@ function SearchResultsComponent({ query }: { query: string }) {
                     </>
                 )}
             </div>
-            <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
-                <div className="flex flex-col gap-4">
+            {/* <div className="giflist grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2"> */}
+            <div className="giflist grid grid-cols-2 lg:grid-cols-3  gap-x-4 mt-2">
+                {/* <div className="flex flex-col gap-4">
                     {firstColumn?.map((gif) => (
                         <GifLoader key={gif.id} gif={gif} />
                     ))}
@@ -70,7 +79,16 @@ function SearchResultsComponent({ query }: { query: string }) {
                     {thirdColumn?.map((gif) => (
                         <GifLoader key={gif.id} gif={gif} />
                     ))}
-                </div>
+                </div> */}
+                {
+                    columns?.map((column) => (
+                        <div className="flex flex-col gap-4" key={column[0].id}>
+                            {column?.map((gif) => (
+                                <GifLoader key={gif.id} gif={gif} />
+                            ))}
+                        </div>
+                    ))
+                }
             </div>
             <PaginationComponent
                 paginationConfig={paginationConfig}
