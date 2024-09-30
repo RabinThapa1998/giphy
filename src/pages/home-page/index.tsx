@@ -3,6 +3,7 @@ import SearchResultsComponent from './components/search-results-component';
 import ErrorBoundary from '../../lib/ErrorBoundary';
 import useDebounce from '../../hooks/useDebounce';
 import { getQueryParams, setQueryParams } from '../../utils/router-handler';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 const getUrlSearchQuery = () => {
     const searchQuery = getQueryParams().get('search');
@@ -42,15 +43,21 @@ function HomePage() {
                     onChange={handleChange}
                 />
             </div>
-            <ErrorBoundary>
-                <Suspense
-                    fallback={
-                        <p className="text-white font-bold">Loading...</p>
-                    }
-                >
-                    <SearchResultsComponent query={debounced} />
-                </Suspense>
-            </ErrorBoundary>
+            <QueryErrorResetBoundary>
+                {({ reset }) => (
+                    <ErrorBoundary resetQuery={reset}>
+                        <Suspense
+                            fallback={
+                                <p className="text-white font-bold">
+                                    Loading...
+                                </p>
+                            }
+                        >
+                            <SearchResultsComponent query={debounced} />
+                        </Suspense>
+                    </ErrorBoundary>
+                )}
+            </QueryErrorResetBoundary>
         </div>
     );
 }

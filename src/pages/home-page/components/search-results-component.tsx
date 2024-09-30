@@ -1,7 +1,7 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getQueryParams } from '../../../utils/router-handler';
+import { getQueryParams, setQueryParams } from '../../../utils/router-handler';
 import { PaginationConfig } from '../../../../types/config';
 import PaginationComponent from './pagination-component';
 import { limit, offset } from '../../../constants';
@@ -35,7 +35,25 @@ function SearchResultsComponent({ query }: { query: string }) {
             findAllGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
 
-    const columnCount = useMemo(() => (windowSize.width > 1024 ? 3 : 2), [windowSize]);
+
+    useEffect(() => {
+        if(!query){
+            setPaginationConfig({
+                limit,
+                offset,
+                currentPage: 0,
+            });
+            setQueryParams({
+                offset: offset.toString(),
+                limit: limit.toString(),
+            })
+        }
+    },[query])
+
+    const columnCount = useMemo(
+        () => (windowSize.width > 1024 ? 3 : 2),
+        [windowSize]
+    );
 
     const columns = useMemo(() => {
         const cols: Datum[][] = Array.from({ length: columnCount }, () => []);
@@ -45,7 +63,6 @@ function SearchResultsComponent({ query }: { query: string }) {
         return cols;
     }, [data?.data, columnCount]);
 
-    
     return (
         <section>
             <div className="flex text-gray-500 gap-2 justify-end mt-4 italic">
@@ -57,9 +74,9 @@ function SearchResultsComponent({ query }: { query: string }) {
                     </>
                 ) : (
                     <>
-                    <p>Trending</p>/
-                    <p>Total {data?.pagination?.total_count} results</p>/
-                    <p>Page {paginationConfig.currentPage + 1}</p>
+                        <p>Trending</p>/
+                        <p>Total {data?.pagination?.total_count} results</p>/
+                        <p>Page {paginationConfig.currentPage + 1}</p>
                     </>
                 )}
             </div>
@@ -80,15 +97,13 @@ function SearchResultsComponent({ query }: { query: string }) {
                         <GifLoader key={gif.id} gif={gif} />
                     ))}
                 </div> */}
-                {
-                    columns?.map((column) => (
-                        <div className="flex flex-col gap-4" key={column[0].id}>
-                            {column?.map((gif) => (
-                                <GifLoader key={gif.id} gif={gif} />
-                            ))}
-                        </div>
-                    ))
-                }
+                {columns?.map((column, index) => (
+                    <div className="flex flex-col gap-4" key={index}>
+                        {column?.map((gif) => (
+                            <GifLoader key={gif.id} gif={gif} />
+                        ))}
+                    </div>
+                ))}
             </div>
             <PaginationComponent
                 paginationConfig={paginationConfig}

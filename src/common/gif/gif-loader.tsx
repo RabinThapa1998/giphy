@@ -56,16 +56,16 @@ function GifLoader({ gif }: { gif: Datum }) {
                 <picture>
                     <source
                         type="image/webp"
-                        srcSet={gif.images.original.webp}
+                        srcSet={gif.images.original?.webp}
                         media="(min-width: 425px)"
                     />
                     <source
                         type="image/webp"
-                        srcSet={gif.images.preview_webp.url}
+                        srcSet={gif.images.preview_webp?.url}
                         media="(max-width: 424px)"
                     />
                     <img
-                        src={gif.images.preview_gif.url}
+                        src={gif.images.preview_gif?.url}
                         alt={gif.title}
                         className={cn(
                             `w-full h-full transition-opacity duration-300`,
