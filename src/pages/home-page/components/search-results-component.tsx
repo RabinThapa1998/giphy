@@ -1,4 +1,11 @@
-import { memo, useMemo, useState, forwardRef, useImperativeHandle, Ref } from 'react';
+import {
+    memo,
+    useMemo,
+    useState,
+    forwardRef,
+    useImperativeHandle,
+    Ref,
+} from 'react';
 import GifLoader from '../../../common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getQueryParams } from '../../../utils/router-handler';
@@ -19,13 +26,16 @@ const getPaginationConfigFromUrl = (): PaginationConfig => {
     };
 };
 
-function SearchResultsComponent({ query }: { query: string }, ref: Ref<SearchResultsRef>) {
+function SearchResultsComponent(
+    { query }: { query: string },
+    ref: Ref<SearchResultsRef>
+) {
     const windowSize = useWindowSize();
     const [paginationConfig, setPaginationConfig] = useState<PaginationConfig>(
         getPaginationConfigFromUrl
     );
 
-    //* exposing reset pagination config for parent 
+    //* exposing reset pagination config for parent
     useImperativeHandle(ref, () => ({
         resetPagination() {
             setPaginationConfig({
@@ -53,21 +63,37 @@ function SearchResultsComponent({ query }: { query: string }, ref: Ref<SearchRes
     );
 
     const columns = useMemo(() => {
-        const cols: Datum[][] = Array.from({ length: columnCount }, () => []);
-        data?.data?.forEach((gif, index) => {
-            cols[index % columnCount].push(gif);
+        const cols: Record<string, Datum[]> = {};
+        Array.from({ length: columnCount }, () => []).forEach(() => {
+            const randomKey = crypto.randomUUID();
+            cols[randomKey] = [];
         });
+
+        data?.data?.forEach((gif, index) => {
+            const columnKeys = Object.keys(cols);
+            const columnKey = columnKeys[index % columnCount];
+            cols[columnKey].push(gif);
+        });
+
         return cols;
     }, [data?.data, columnCount]);
+    console.log('🚀 ~ columns ~ columns:', data?.data);
 
     return (
         <section>
             <div className="flex text-gray-500 gap-2 justify-end mt-4 italic">
                 {query ? (
                     <>
-                        <p className="">Results for "{query}"</p>/
-                        <p>Total {data?.pagination?.total_count} results</p>/
-                        <p>Page {paginationConfig.currentPage + 1}</p>
+                        <p className="">Results for "{query}"</p>
+                        {data?.data?.length  ? (
+                            <>
+                                /<p>
+                                    Total {data?.pagination?.total_count}{' '}
+                                    results
+                                </p>
+                                /<p>Page {paginationConfig.currentPage + 1}</p>
+                            </>
+                        ):null}
                     </>
                 ) : (
                     <>
@@ -78,13 +104,19 @@ function SearchResultsComponent({ query }: { query: string }, ref: Ref<SearchRes
                 )}
             </div>
             <div className="giflist grid grid-cols-2 lg:grid-cols-3 gap-x-4 mt-2">
-                {columns?.map((column, index) => (
-                    <div className="flex flex-col gap-4" key={index}>
-                        {column?.map((gif) => (
-                            <GifLoader key={gif.id} gif={gif} />
-                        ))}
+                {data?.data?.length ? (
+                    Object.entries(columns).map(([columnKey, column]) => (
+                        <div className="flex flex-col gap-4" key={columnKey}>
+                            {column?.map((gif) => (
+                                <GifLoader key={gif.id} gif={gif} />
+                            ))}
+                        </div>
+                    ))
+                ) : (
+                    <div className="border-secondary border rounded-primary flex justify-center items-center w-full py-4 px-4 col-span-3 min-h-40">
+                        <h6 className="text-2xl font-semibold">No Data</h6>
                     </div>
-                ))}
+                )}
             </div>
             <PaginationComponent
                 paginationConfig={paginationConfig}
