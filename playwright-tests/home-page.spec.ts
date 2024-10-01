@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const DEMO_SEARCH_TEXT="Rock"
+const RANDOM_SEARCH_TEXT="dsafdazxcvzxv"
 const DEFAULT_PAGINATION_OFFSET= 0
 const DEFAULT_PAGINATION_LIMIT= 50
 test.describe('HomePage', () => {
@@ -46,7 +47,7 @@ test.describe('HomePage', () => {
     test('should display query name when query', async ({ page }) => {
         await page.getByRole('textbox').fill(DEMO_SEARCH_TEXT);
         
-        await expect(page.getByText(/DEMO_SEARCH_TEXT/i)).toBeVisible();
+        await expect(page.getByText(DEMO_SEARCH_TEXT)).toBeVisible();
         
     })
     test('url should have search params synced with search field', async ({ page }) => {
@@ -64,6 +65,76 @@ test.describe('HomePage', () => {
 
         expect(currentUrl).toContain('offset='+DEFAULT_PAGINATION_OFFSET);
         expect(currentUrl).toContain('limit='+DEFAULT_PAGINATION_LIMIT);
+    })
+
+  
+    test('should update url params when next pagination button clicked', async ({ page }) => {
+        await page.getByRole('textbox').fill(DEMO_SEARCH_TEXT);
+
+        await page.waitForSelector('.gif');
+
+        //*click next button
+        await page.getByRole('button', { name: 'Next' }).click();
+
+
+        //*wait for gif to show up
+        await page.waitForSelector('.gif');
+        const currentUrl = page.url();
+
+
+        const updatedOffset = DEFAULT_PAGINATION_LIMIT +DEFAULT_PAGINATION_OFFSET
+        expect(currentUrl).toContain('search='+ DEMO_SEARCH_TEXT);
+        expect(currentUrl).toContain('offset='+ updatedOffset);
+        expect(currentUrl).toContain('limit='+DEFAULT_PAGINATION_LIMIT);
+    })
+
+    test('should display page 2  when next pagination button clicked', async ({ page }) => {
+        await page.getByRole('textbox').fill(DEMO_SEARCH_TEXT);
+
+        await page.waitForSelector('.gif');
+
+        //*click next button
+        await page.getByRole('button', { name: 'Next' }).click();
+
+
+        //*wait for gif to show up
+        await page.waitForSelector('.gif');
+
+        await expect(page.getByText('Page 2')).toBeVisible();
+    })
+
+    test('should display no data message for empty data received', async ({ page }) => {
+        await page.getByRole('textbox').fill(RANDOM_SEARCH_TEXT); 
+
+        await expect(page.getByText('No Data')).toBeVisible();
+    })
+
+    test('should have prev pagination button disabled when first page', async ({ page }) => {
+        await page.getByRole('textbox').fill(DEMO_SEARCH_TEXT); 
+
+        //*wait for gif to show up
+        await page.waitForSelector('.gif');
+        
+        await expect(page.getByText('Prev')).toBeVisible();
+        await expect(page.getByRole('button',{name:'Prev'})).toBeDisabled();
+    })
+
+  
+    test('should have next pagination button disabled when last page', async ({ page }) => {
+        await page.getByRole('textbox').fill("Deveil");  //* this query seems to have only 90 so next page for page 2 must be disabled
+
+        await page.waitForSelector('.gif');
+
+        //*click next button
+        await page.getByRole('button', { name: 'Next' }).click();
+
+
+        //*wait for gif to show up
+        await page.waitForSelector('.gif');
+
+        await expect(page.getByText('Page 2')).toBeVisible();
+
+        await expect(page.getByRole('button',{name:'Next'})).toBeDisabled();
     })
 
   
