@@ -69,10 +69,3 @@ To run end-to-end tests with the Playwright UI:
 npx playwright test --ui
 ```
 
-## Contributing
-
-Instructions for how to contribute to your project can go here.
-
-## License
-
-Specify your project's license here.
