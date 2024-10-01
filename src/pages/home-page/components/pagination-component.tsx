@@ -23,6 +23,7 @@ function PaginationComponent({
                     currentPage: prev.currentPage + 1,
                 };
 
+                //*update query params
                 setQueryParams({
                     offset: newConfig.offset.toString(),
                     limit: newConfig.limit.toString(),

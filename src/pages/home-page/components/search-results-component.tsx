@@ -11,7 +11,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { getQueryParams } from '../../../utils/router-handler';
 import { PaginationConfig, SearchResultsRef } from '../../../../types/config';
 import PaginationComponent from './pagination-component';
-import { limit, offset } from '../../../constants';
+import { GIFS_COLUMN_LG, GIFS_COLUMN_SM, limit, offset, SCREEN_WIDTH_LG } from '../../../constants';
 import { findAllGifs } from '../../../services/gif.service';
 import { Datum } from '../../../../types';
 import useWindowSize from '../../../hooks/useWindowSize';
@@ -57,11 +57,13 @@ function SearchResultsComponent(
             findAllGifs(query, paginationConfig.limit, paginationConfig.offset),
     });
 
+    //*For responsive grid view
     const columnCount = useMemo(
-        () => (windowSize.width > 1024 ? 3 : 2),
+        () => (windowSize.width > SCREEN_WIDTH_LG ? GIFS_COLUMN_LG : GIFS_COLUMN_SM),
         [windowSize]
     );
 
+    //*Auto generate grid columns
     const columns = useMemo(() => {
         const cols: Record<string, Datum[]> = {};
         Array.from({ length: columnCount }, () => []).forEach(() => {
@@ -77,7 +79,6 @@ function SearchResultsComponent(
 
         return cols;
     }, [data?.data, columnCount]);
-    console.log('🚀 ~ columns ~ columns:', data?.data);
 
     return (
         <section>

@@ -9,7 +9,7 @@ function GifLoader({ gif }: { gif: Datum }) {
         threshold: 0,
     });
     const [isLoaded, setIsLoaded] = useState(false);
-    const [hasBeenVisible, setHasBeenVisible] = useState(false); // Track if it has ever been visible
+    const [hasBeenVisible, setHasBeenVisible] = useState(false); 
 
     const colorPalette = [
         '#00FF99',
@@ -19,9 +19,11 @@ function GifLoader({ gif }: { gif: Datum }) {
         '#00CCFF',
     ];
 
+    //*Track if it has ever been visible,once visible ,dont toggle
     useEffect(() => {
         if (isIntersecting) {
-            setHasBeenVisible(true); // Set true when the component enters the viewport for the first time
+            //*Set true when the component enters the viewport for the first time
+            setHasBeenVisible(true); 
         }
     }, [isIntersecting]);
 
