@@ -3,7 +3,7 @@ import { BASE_URL } from '@/config';
 
 const dummyData = {
     type: 'gif',
-    id: 'PgirKCKEWHXK7ox5QO',
+    id: '',
     url: '/test.png',
     slug: 'peacocktv-downton-abbey-violet-crawley-dowager-countess-PgirKCKEWHXK7ox5QO',
     bitly_gif_url: '/test.png',
@@ -74,10 +74,15 @@ const dummyData = {
         },
     },
 };
+
+const getDummyData = (id:string)=> {
+    dummyData.id = id;
+    return dummyData
+}
 export const handlers = [
     http.get(BASE_URL + '/gifs/trending', () => {
         return HttpResponse.json({
-            data: [dummyData, dummyData, dummyData],
+            data: [getDummyData('sxcv'), getDummyData('vbte'), getDummyData('cxerb')],
             meta: {
                 status: 200,
                 msg: 'OK',
@@ -106,7 +111,7 @@ export const handlers = [
         // await delay(2000)
 
         return HttpResponse.json({
-            data: [dummyData, dummyData, dummyData],
+            data: [getDummyData('sxcvvf'), getDummyData('dvbte'), getDummyData('dscxerb')],
             meta: {
                 status: 200,
                 msg: 'OK',

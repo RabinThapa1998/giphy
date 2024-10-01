@@ -1,51 +1,78 @@
-# React + TypeScript + Vite
+# Project Name
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Brief description of your project goes here.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Follow these steps to set up the project on your local machine.
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Git
+- Node.js (version 18 or higher)
+- npm or yarn
 
-- Configure the top-level `parserOptions` property like this:
+### Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Clone the repository:
+   ```
+   git clone https://github.com/RabinThapa1998/giphy.git
+   ```
+
+2. Navigate to the project directory:
+   ```
+   cd giphy
+   ```
+
+3. Install dependencies:
+   
+   Using npm:
+   ```
+   npm install
+   ```
+   
+   Or using yarn:
+   ```
+   yarn install
+   ```
+
+4. Set up environment variables:
+   - Copy the `.env.example` file and rename it to `.env.development`
+   - Open `.env.development` and add your GIPHY API key:
+     ```
+     VITE_APP_KEY=your_api_key_here
+     ```
+
+## Usage
+
+To start the development server:
+
+```
+yarn dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Testing
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Running Unit Tests with Vitest
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+To run unit tests:
+
 ```
-# giphy
+yarn test
+```
+
+### Running End-to-End Tests with Playwright
+
+To run end-to-end tests with the Playwright UI:
+
+```
+npx playwright test --ui
+```
+
+## Contributing
+
+Instructions for how to contribute to your project can go here.
+
+## License
+
+Specify your project's license here.
