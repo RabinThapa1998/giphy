@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import PaginationComponent from '../pagination-component';
-import { PaginationConfig } from '../../../../../types/config';
+import { PaginationConfig } from '@/types/config';
 
 const paginationConfig: PaginationConfig = {
     limit: 50,

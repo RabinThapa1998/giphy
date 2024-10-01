@@ -1,5 +1,5 @@
-import { TrendingResponse } from '../../types';
-import fetchHandler from '../utils/fetch-handler';
+import { TrendingResponse } from '@/types';
+import fetchHandler from '@/utils/fetch-handler';
 
 export async function findAllGifs(
     query: string,

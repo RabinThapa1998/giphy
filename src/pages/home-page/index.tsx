@@ -1,11 +1,11 @@
 import React, { Suspense, useCallback, useRef, useState, useTransition } from 'react';
 import SearchResultsComponent from './components/search-results-component';
-import ErrorBoundary from '../../lib/ErrorBoundary';
-import useDebounce from '../../hooks/useDebounce';
-import { getQueryParams, setQueryParams } from '../../utils/router-handler';
+import ErrorBoundary from '@/lib/ErrorBoundary';
+import useDebounce from '@/hooks/useDebounce';
+import { getQueryParams, setQueryParams } from '@/utils/router-handler';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { limit, offset } from '../../constants';
-import { SearchResultsRef } from '../../../types/config';
+import { limit, offset } from '@/constants';
+import { SearchResultsRef } from '@/types/config';
 
 const getUrlSearchQuery = () => {
     const searchQuery = getQueryParams().get('search');

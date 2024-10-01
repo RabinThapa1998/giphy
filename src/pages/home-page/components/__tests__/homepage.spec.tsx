@@ -22,7 +22,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 describe('HomePage', () => {
-    test('renders and checks if search input is displayed', async () => {
+    test('renders and checks if search input is changed and loading is displayed', async () => {
         const { getByPlaceholderText } = render(
             <Wrapper>
                 <HomePage />

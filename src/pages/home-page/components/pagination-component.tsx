@@ -1,6 +1,6 @@
 import React from 'react';
-import { setQueryParams } from '../../../utils/router-handler';
-import { PaginationConfig } from '../../../../types/config';
+import { setQueryParams } from '@/utils/router-handler';
+import { PaginationConfig } from '@/types/config';
 
 function PaginationComponent({
     paginationConfig,

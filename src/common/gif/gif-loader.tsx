@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Datum } from '../../../types';
-import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-import { cn } from '../../utils/cn';
+import { Datum } from '@/types';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { cn } from '@/utils/cn';
 
 function GifLoader({ gif }: { gif: Datum }) {
     const [ref, isIntersecting] = useIntersectionObserver({

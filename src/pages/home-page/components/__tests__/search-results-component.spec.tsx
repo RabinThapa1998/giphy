@@ -78,7 +78,7 @@ describe('SearchResultsComponent with query', () => {
 
         expect(await screen.findAllByTestId('gif')).toHaveLength(3);
     });
-    test('renders and check for suspense loading state"', async () => {
+    test('renders and check for suspense', async () => {
         screen.debug();
         const { getByText } = render(
             <Wrapper>

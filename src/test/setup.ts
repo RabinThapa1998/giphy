@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import { worker } from '../mocks/worker';
+import { worker } from '@/mocks/worker';
 
 beforeAll(() => worker.listen());
 beforeEach(() => worker.resetHandlers());

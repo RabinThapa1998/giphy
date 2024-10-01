@@ -6,15 +6,15 @@ import {
     useImperativeHandle,
     Ref,
 } from 'react';
-import GifLoader from '../../../common/gif/gif-loader';
+import GifLoader from '@/common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getQueryParams } from '../../../utils/router-handler';
-import { PaginationConfig, SearchResultsRef } from '../../../../types/config';
+import { getQueryParams } from '@/utils/router-handler';
+import { PaginationConfig, SearchResultsRef } from '@/types/config';
 import PaginationComponent from './pagination-component';
-import { GIFS_COLUMN_LG, GIFS_COLUMN_SM, limit, offset, SCREEN_WIDTH_LG } from '../../../constants';
-import { findAllGifs } from '../../../services/gif.service';
-import { Datum } from '../../../../types';
-import useWindowSize from '../../../hooks/useWindowSize';
+import { GIFS_COLUMN_LG, GIFS_COLUMN_SM, limit, offset, SCREEN_WIDTH_LG } from '@/constants';
+import { findAllGifs } from '@/services/gif.service';
+import { Datum } from '@/types';
+import useWindowSize from '@/hooks/useWindowSize';
 
 const getPaginationConfigFromUrl = (): PaginationConfig => {
     const params = getQueryParams();
