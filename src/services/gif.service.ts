@@ -1,18 +1,18 @@
-import { TrendingResponse } from '@/types';
+import { GifResponse } from '@/types';
 import fetchHandler from '@/utils/fetch-handler';
 
 export async function findAllGifs(
     query: string,
     limit: number,
     offset: number
-): Promise<TrendingResponse> {
+): Promise<GifResponse> {
 
     const params = { limit: limit.toString(), offset: offset.toString() };
 
     if (!query) {
-        return fetchHandler<TrendingResponse>('gifs/trending', params);
+        return fetchHandler<GifResponse>('gifs/trending', params);
     } else {
-        return fetchHandler<TrendingResponse>('gifs/search', { ...params, q: query });
+        return fetchHandler<GifResponse>('gifs/search', { ...params, q: query });
     }
 }
 

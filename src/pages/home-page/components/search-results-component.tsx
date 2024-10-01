@@ -9,11 +9,16 @@ import {
 import GifLoader from '@/common/gif/gif-loader';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getQueryParams } from '@/utils/router-handler';
-import { PaginationConfig, SearchResultsRef } from '@/types/config';
 import PaginationComponent from './pagination-component';
-import { GIFS_COLUMN_LG, GIFS_COLUMN_SM, limit, offset, SCREEN_WIDTH_LG } from '@/constants';
+import {
+    GIFS_COLUMN_LG,
+    GIFS_COLUMN_SM,
+    limit,
+    offset,
+    SCREEN_WIDTH_LG,
+} from '@/constants';
 import { findAllGifs } from '@/services/gif.service';
-import { Datum } from '@/types';
+import { Gif, PaginationConfig, SearchResultsRef } from '@/types';
 import useWindowSize from '@/hooks/useWindowSize';
 
 const getPaginationConfigFromUrl = (): PaginationConfig => {
@@ -59,13 +64,16 @@ function SearchResultsComponent(
 
     //*For responsive grid view
     const columnCount = useMemo(
-        () => (windowSize.width > SCREEN_WIDTH_LG ? GIFS_COLUMN_LG : GIFS_COLUMN_SM),
+        () =>
+            windowSize.width > SCREEN_WIDTH_LG
+                ? GIFS_COLUMN_LG
+                : GIFS_COLUMN_SM,
         [windowSize]
     );
 
     //*Auto generate grid columns
     const columns = useMemo(() => {
-        const cols: Record<string, Datum[]> = {};
+        const cols: Record<string, Gif[]> = {};
         Array.from({ length: columnCount }, () => []).forEach(() => {
             const randomKey = crypto.randomUUID();
             cols[randomKey] = [];
@@ -86,15 +94,16 @@ function SearchResultsComponent(
                 {query ? (
                     <>
                         <p className="">Results for "{query}"</p>
-                        {data?.data?.length  ? (
+                        {data?.data?.length ? (
                             <>
-                                /<p>
+                                /
+                                <p>
                                     Total {data?.pagination?.total_count}{' '}
                                     results
                                 </p>
                                 /<p>Page {paginationConfig.currentPage + 1}</p>
                             </>
-                        ):null}
+                        ) : null}
                     </>
                 ) : (
                     <>

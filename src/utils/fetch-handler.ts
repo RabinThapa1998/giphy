@@ -1,4 +1,4 @@
-import { APP_KEY, BASE_URL } from '../config';
+import { APP_KEY, BASE_URL } from '@/config';
 
 async function fetchHandler<T>(
     endpoint: string,

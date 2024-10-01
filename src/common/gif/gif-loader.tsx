@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Datum } from '@/types';
+import { Gif } from '@/types';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { cn } from '@/utils/cn';
 
-function GifLoader({ gif }: { gif: Datum }) {
+function GifLoader({ gif }: { gif: Gif }) {
     const [ref, isIntersecting] = useIntersectionObserver({
         rootMargin: '0px',
         threshold: 0,
