@@ -20,6 +20,7 @@ import {
 import { findAllGifs } from '@/services/gif.service';
 import { Gif, PaginationConfig, SearchResultsRef } from '@/types';
 import useWindowSize from '@/hooks/useWindowSize';
+import withSuspenseAndErrorBoundary from '@/hoc/withSuspenseAndErrorBoundary';
 
 const getPaginationConfigFromUrl = (): PaginationConfig => {
     const params = getQueryParams();
@@ -31,7 +32,7 @@ const getPaginationConfigFromUrl = (): PaginationConfig => {
     };
 };
 
-function SearchResultsComponent(
+function SearchResults(
     { query }: { query: string },
     ref: Ref<SearchResultsRef>
 ) {
@@ -137,4 +138,6 @@ function SearchResultsComponent(
     );
 }
 
-export default memo(forwardRef(SearchResultsComponent));
+const SearchResultsComponent = withSuspenseAndErrorBoundary(memo(forwardRef(SearchResults)));
+
+export default SearchResultsComponent;

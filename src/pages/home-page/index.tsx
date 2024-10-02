@@ -1,9 +1,7 @@
-import React, { Suspense, useCallback, useRef, useState, useTransition } from 'react';
+import React, { useCallback, useRef, useState, useTransition } from 'react';
 import SearchResultsComponent from './components/search-results-component';
-import ErrorBoundary from '@/lib/ErrorBoundary';
 import useDebounce from '@/hooks/useDebounce';
 import { getQueryParams, setQueryParams } from '@/utils/router-handler';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { limit, offset } from '@/constants';
 import { SearchResultsRef } from '@/types/config';
 
@@ -18,7 +16,6 @@ function HomePage() {
     const [, startTransition] = useTransition();
     const searchResultsRef = useRef<SearchResultsRef>(null);
 
-
     const handleResetPagination = () => {
         if (searchResultsRef.current) {
             searchResultsRef.current?.resetPagination();
@@ -31,9 +28,9 @@ function HomePage() {
                 offset: offset.toString(),
                 limit: limit.toString(),
             });
-            
+
             handleResetPagination();
-            
+
             startTransition(() => {
                 setSearchTerm(e.target.value);
             });
@@ -55,21 +52,8 @@ function HomePage() {
                     onChange={handleChange}
                 />
             </div>
-            <QueryErrorResetBoundary>
-                {({ reset }) => (
-                    <ErrorBoundary resetQuery={reset}>
-                        <Suspense
-                            fallback={
-                                <p className="text-white font-bold">
-                                    Loading...
-                                </p>
-                            }
-                        >
-                            <SearchResultsComponent ref={searchResultsRef} query={debounced} />
-                        </Suspense>
-                    </ErrorBoundary>
-                )}
-            </QueryErrorResetBoundary>
+
+            <SearchResultsComponent ref={searchResultsRef} query={debounced} />
         </div>
     );
 }
