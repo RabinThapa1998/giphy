@@ -1,6 +1,6 @@
-# Project Name
+# GIPHY
 
-Brief description of your project goes here.
+A Gifs search app which utilizes GIPHY API.
 
 ## Getting Started
 
